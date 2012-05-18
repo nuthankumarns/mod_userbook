@@ -1,0 +1,102 @@
+<?php
+// no direct access
+//http://docs.joomla.org/Creating_a_Hello_World_Module_for_Joomla_1.5#Completed_mod_helloworld.php_file
+defined( '_JEXEC' ) or die( 'Restricted access' ); ?>
+<style type="text/css">
+		
+		#divroller_container {
+			width:auto;
+		}
+		
+		.box_dark {
+			background-color: #dfdfdf;
+		}
+		.box_light {
+			background-color: #ffffff;
+		}
+		
+		.box_size {
+			padding:10px;
+		}
+		
+		.external_link{
+			color: green;
+			font-size:20px;
+		}
+		
+		</style>
+		<?php //echo "<pre>";print_r($books); ?>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.js"></script>
+		<script type="text/javascript">
+			/**
+ * @author ilkinulas@gmail.com
+ * jquery plugin that rotates div elements inside a given div element
+ */
+var hiddenDivs = [];
+
+jQuery.fn.divroller = function(options) {
+	settings = jQuery.extend( {
+		visible : 3,
+		pause : 3000
+	}, options);
+		
+	start(settings, this);
+	//console.log(this);
+	function start(settings, container) {
+		var divs = container.children();
+		//hide unvisible divs
+		while (settings.visible < divs.length) {
+			var removedDiv = $(divs[divs.length - 1]).remove();
+			hiddenDivs.push(removedDiv);
+			divs = container.children();
+		}
+		
+		setTimeout( function() {
+			roll(settings, container)
+		}, settings.pause);
+		
+	};
+
+	function roll(settings, container) {
+		//Dom manipulation.
+		container.prepend(hiddenDivs.pop());
+		hiddenDivs.unshift($(container.children()[settings.visible]).remove());
+		
+		//Efect
+		$(container.children()[0]).hide();
+		$(container.children()[0]).slideDown("slow");
+
+		//Repeat
+		setTimeout( function() {
+			roll(settings, container)
+		}, settings.pause);
+	}
+}
+		</script>
+		<div id="divroller_container">	
+		<div class="box_dark box_size"  id="item1">
+			<a href="#"><?php echo $books[0][name];?> </a>
+		</div>
+		<div class="box_light box_size" id="item2">
+			<a href="#"><?php echo $books[1][name];?></a>
+		</div>
+		<div class="box_dark box_size"  id="item3">
+			<a href="#"><?php echo $books[2][name];?></a>
+		</div>
+		<div class="box_light box_size" id="item4">
+			<a href="#"> <?php echo $books[3][name];?> </a>
+		</div>
+		<div class="box_dark box_size"  id="item5">
+			<a href="#"><?php echo $books[4][name];?></a>
+		</div>
+		<div class="box_light box_size" id="item6">
+			<a href="#"><?php echo $books[4][name];?></a>
+		</div>
+	</div>
+	<script type="text/javascript">
+	//setInterval(function() {
+		$("#divroller_container").divroller({pause:2000, visible:4});
+	//	}, 5000);
+	</script>
+
+
